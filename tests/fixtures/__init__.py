@@ -1,0 +1,11 @@
+from fixtures.camera import *  # noqa: F403
+from fixtures.client import *  # noqa: F403
+from fixtures.database import *  # noqa: F403
+from fixtures.exif_data import *  # noqa: F403
+from fixtures.image_exif import *  # noqa: F403
+from fixtures.lens import *  # noqa: F403
+from fixtures.llm import *  # noqa: F403
+from fixtures.metrics import *  # noqa: F403
+from fixtures.recommendations import *  # noqa: F403
+from fixtures.results import *  # noqa: F403
+from fixtures.search import *  # noqa: F403

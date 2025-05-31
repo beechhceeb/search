@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -o errexit
+
+cd "$WORKSPACE_DIR"
+
+ruff check "${SRC_PATH}" "${TEST_PATH}"
+mypy "${SRC_PATH}" "${TEST_PATH}"

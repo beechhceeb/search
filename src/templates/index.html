@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head class="head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/json-viewer-js@latest/dist/json-viewer.css">
+    <title>Exif Analysis</title>
+</head>
+<body>
+    {{ header | safe }}
+
+    <div id="main-content">
+        <div class="centered-content">
+            <div class="container mt-20vh">
+                <h1>What kind of photographer are you?</h1>
+                <hr>
+                <br>
+                <p>
+                    We analyze your shooting data and recommend meaningful camera and lens upgrades at three budget levels — tailored to help you grow as a photographer.
+                    Upload your images to get a smart breakdown of your camera and lens usage, exposure habits, and focal length preferences.
+                    <br><br>
+                    Drop in your favorite shots below to get started....
+                </p>
+                <br>
+                <div class="input-container">
+                    <form id="imageForm" method="POST">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-11 col-sm-10 col-8 p-0">
+                                    <input class="form-control" type="file" name="image_file" id="imageInput" accept="image/jpeg, image/jpg" multiple>
+                                </div>
+                                <div class="col-md-1 col-sm-2 col-4 p-0">
+                                    <input class="btn btn-cta" type="submit" value="Submit">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <footer>
+                    <p class="disclaimer">
+                    By using this tool, you are agreeing to allow us to analyze and store the metadata of your images.
+                    This tool extracts data from your pictures on your computer before sending that data for analysis.
+                    We do not extract any location data. We do not receive the actual images, and cannot store them.
+                    The data we collect is limited to file names, exposure information, and camera/lens model data.
+                    </p>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <div id="results-container"></div>
+
+    <div class="progress-wrapper">
+        <div id="progressContainer"></div>
+    </div>
+
+    {{ footer | safe }}
+
+</body>
+<foot>
+
+    <script src="{{ url_for('static', filename='js/piexifjs/piexif.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/progressbar.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/@alenaksu/json-viewer@2.1.0/dist/json-viewer.bundle.js"></script>
+    <script src="{{ url_for('static', filename='js/index.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+    {% if recommendations_id %}
+    <script>
+        // recommendations is populated, so we must be recalling an previous result.
+        // We need to call the function to display the results.
+        document.addEventListener('custom-ready', function() {
+            recallRecommendations("{{ recommendations_id }}");
+        });
+    </script>
+    {% endif %}
+    </foot>
+</html>
+

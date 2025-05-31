@@ -1,0 +1,266 @@
+
+<h3 id="how-you-shoot-anchor">How you shoot</h3>
+<hr>
+<br>
+
+<div>
+    <div class="row">
+        <h5>
+            Focal Lengths
+            <i class="bi bi-question-circle-fill tooltip-icon" data-bs-toggle="tooltip" title="The distance between lens and sensor, in millimetres. Focal lengths are given in full frame terms, to make comparisons between cameras of different sensor sizes possible"></i>
+        </h5>
+        {% if recommendations.results.focal_length %}
+
+        <div class="dropdown-container">
+            <select id="chartSelector" class="form-select"> Chart Type:
+                <option value="binned">Focal lengths by type (bar)</option>
+                <option value="discrete">Zoom focal length frequency (line)</option>
+            </select>
+        </div>
+
+        <div class="chart-container col-md-12" id="binnedChartContainer">
+            <canvas id="focalLengthChartBinned"></canvas>
+        </div>
+        <div class="chart-container col-md-12" id="discreteChartContainer">
+            <canvas id="focalLengthChartDiscrete"></canvas>
+        </div>
+
+        <div class="col-md-3">
+            <h5>Max {{ recommendations.results.focal_length.percentage_taken_at_highest_value }}%</h5>
+            <footer class="blockquote-footer padded-footer">
+                {% if recommendations.results.focal_length.percentage_taken_at_highest_value < 5 %}
+                "That's close enough, thanks"
+                {% endif %}
+                {% if recommendations.results.focal_length.percentage_taken_at_highest_value > 5 %}
+                "Closer dammit, closer!"
+                {% endif %}
+            </footer>
+            <p>
+                {{ recommendations.results.focal_length.percentage_taken_at_highest_value }}% of images are taken at the maximum available focal length.
+                Which does not exceed {{ recommendations.results.metrics.focal_range.stop }}mm.
+                Many images taken at the maximum available focal length suggest that you would have gone even tighter if you could.
+            </p>
+        </div>
+        {% endif %}
+
+        {% if recommendations.results.focal_length %}
+        <div class="col-md-3">
+            <h5>Min {{ recommendations.results.focal_length.percentage_taken_at_lowest_value }}%</h5>
+            <footer class="blockquote-footer padded-footer">
+                {% if recommendations.results.focal_length.percentage_taken_at_lowest_value < 5 %}
+                "Everything fits!"
+                {% endif %}
+                {% if recommendations.results.focal_length.percentage_taken_at_lowest_value > 5 %}
+                "I can try a panorama?"
+                {% endif %}
+            </footer>
+            <p>
+                {{ recommendations.results.focal_length.percentage_taken_at_lowest_value }}% of images are taken at the minimum available focal length.
+                Which does not exceed {{ recommendations.results.metrics.focal_range.start }}mm.
+                Many images taken at the minimum available focal length would suggest that you could have fit more in with a wider lens.
+            </p>
+        </div>
+        {% endif %}
+
+        <div class="col-md-3">
+            <h5>Average {{ recommendations.results.focal_length.mode }}mm</h5>
+            {% if recommendations.results.focal_length.mode %}
+            <footer class="blockquote-footer padded-footer">
+                {% if recommendations.results.focal_length.mode < 30 %}
+                "I like to get everything in there"
+                {% endif %}
+                {% if recommendations.results.focal_length.mode > 30 and recommendations.results.focal_length.mode < 70 %}
+                "That's what the human eye sees in"
+                {% endif %}
+                {% if recommendations.results.focal_length.mode > 69 %}
+                "I'm not getting any closer!"
+                {% endif %}
+            </footer>
+            <p>
+                Of the remainder, your most used focal length is {{ recommendations.results.focal_length.mode }}mm, with an average of {{ recommendations.results.focal_length.mean }}mm.
+                {% if recommendations.results.focal_length.mode < 30 %}
+                That's a wide angle lens, typically used for landscapes, street photography and wide astrophotography.
+                {% endif %}
+                {% if recommendations.results.focal_length.mode > 30 and recommendations.results.focal_length.mode < 70 %}
+                That's a normal focal length, notoriously versatile and capable of being used for most photography.
+                {% endif %}
+                {% if recommendations.results.focal_length.mode > 69 and recommendations.results.focal_length.mode < 150 %}
+                That's a moderate telephoto focal length, typically used for portraiture.
+                {% endif %}
+                {% if recommendations.results.focal_length.mode > 149 and recommendations.results.focal_length.mode < 300 %}
+                That's a telephoto focal length, typically used for sports and some wildlife.
+                {% endif %}
+                {% if recommendations.results.focal_length.mode > 300 %}
+                That's an extreme telephoto focal length, typically used for wildlife and deep sky astrophotography.
+                {% endif %}
+            </p>
+            {% endif %}
+        </div>
+
+        {% if recommendations.results.metrics.focal_range %}
+        <div class="col-md-3">
+            <h5>Range {{ recommendations.results.metrics.focal_range.start }}mm - {{ recommendations.results.metrics.focal_range.stop }}mm</h5>
+            <footer class="blockquote-footer padded-footer">
+            {%  if recommendations.results.metrics.focal_range.start >= 24%}
+                "If your pictures aren't good enough, you aren't close enough" - Robert Capa
+            {% elif recommendations.results.metrics.focal_range.stop > 135 %}
+                "Mind if I use that portable keyhole?" - Rear Window
+            {%  else %}
+                “A good photograph is knowing where to stand” - Ansel Adams
+            {% endif %}
+
+            </footer>
+            <p>
+                {% if recommendations.results.metrics.focal_range.start >= 24 %}
+                Your current kit is lacking on the wider end of the focal range, you might want to consider a wider lens.
+                {% elif recommendations.results.metrics.focal_range.stop <= 80 %}
+                Your current kit is lacking on the longer end of the focal range, you might want to consider a longer lens for things like portraits, wildlife or sports photography.
+                {% elif recommendations.results.metrics.focal_range.stop < 135 %}
+                Your current kit is lacking on the longer end of the focal range, you might want to consider a longer lens for things like sports or nature photography.
+                {% else %}
+                Your current kit has a good range of focal lengths, and you can shoot at a variety of distances.
+                {% endif %}
+            </p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="section-padding">
+    <div class="row">
+        <h5>Exposure</h5>
+        {% if recommendations.results.aperture %}
+        <div class="chart-container">
+            <canvas id="exposureRadarChart"></canvas>
+        </div>
+        <div class="col-md-4">
+            <h5>
+                Aperture
+                <i class="bi bi-question-circle-fill tooltip-icon" data-bs-toggle="tooltip" title="How wide your lens opens to let light in"></i>
+                {{ recommendations.results.aperture.percentage_taken_at_lowest_value }}%
+            </h5>
+            <footer class="blockquote-footer padded-footer">
+                {% if recommendations.results.aperture.percentage_taken_at_lowest_value < 30 %}
+                "Bokehlicious..."
+                {% endif %}
+                {% if recommendations.results.aperture.percentage_taken_at_lowest_value >= 30 and recommendations.results.aperture.percentage_taken_at_lowest_value <= 60 %}
+                "f/8 and be there" - Weegee
+                {% endif %}
+                {% if recommendations.results.aperture.percentage_taken_at_lowest_value > 60 %}
+                "I've got all the light I need"
+                {% endif %}
+            </footer>
+            <p>
+                You shoot at the widest possible aperture {{ recommendations.results.aperture.percentage_taken_at_lowest_value }}% of the time,
+                {% if recommendations.results.aperture.mode_instances_at_lowest_value %}
+                which is most often at f/{{ recommendations.results.aperture.mode_instances_at_lowest_value }}.
+                {% endif %}
+                Lower apertures allow you to use faster shutter speeds and lower ISOs, improving image quality and helping isolate your subject.
+                <br>
+                Your average aperture is f{{ recommendations.results.aperture.mean }}, and your most used is f{{ recommendations.results.aperture.mode }}.
+            </p>
+        </div>
+        {% endif %}
+
+        {% if recommendations.results.iso %}
+        <div class="col-md-4">
+            <h5>
+                ISO
+                <i class="bi bi-question-circle-fill tooltip-icon" data-bs-toggle="tooltip" title="Sensor sensitivity to light"></i>
+                {{ recommendations.results.iso.percentage_taken_at_highest_value }}%
+            </h5>
+            <footer class="blockquote-footer padded-footer">
+                {% if recommendations.results.iso.percentage_taken_at_highest_value < 10 %}
+                "Low ISO is nice(O)"
+                {% endif %}
+                {% if recommendations.results.iso.percentage_taken_at_highest_value >= 10 and recommendations.results.iso.percentage_taken_at_highest_value < 30 %}
+                "What happened to the sun?"
+                {% endif %}
+                {% if recommendations.results.iso.percentage_taken_at_highest_value >= 30 %}
+                "Stay still dammit"
+                {% endif %}
+            </footer>
+            <p>
+                You shoot at a high ISO (above ISO 6400) {{ recommendations.results.iso.percentage_taken_at_highest_value }}% of the time.
+                High ISOs result in grainier, less detailed images.
+                <br>
+                Your average ISO is {{ recommendations.results.iso.mean }}, and your most used is {{ recommendations.results.iso.mode }}.
+            </p>
+        </div>
+        {% endif %}
+
+        {% if recommendations.results.shutter_speed %}
+        <div class="col-md-4">
+            <h5>
+                Shutter Speed
+                <i class="bi bi-question-circle-fill tooltip-icon" data-bs-toggle="tooltip" title="How long the camera's sensor is exposed"></i>
+                {{ recommendations.results.shutter_speed.percentage_taken_at_lowest_value }}%
+            </h5>
+            <footer class="blockquote-footer padded-footer">
+                {% if recommendations.results.shutter_speed.percentage_taken_at_lowest_value < 10 %}
+                "Steadiest hand in the west..."
+                {% endif %}
+                {% if recommendations.results.shutter_speed.percentage_taken_at_lowest_value > 10 %}
+                "Why would I want a tripod?"
+                {% endif %}
+            </footer>
+            <p>
+                You tend to exceed the reciprocal rule <span class="focal-note">(1 / focal length)</span>
+                {{ recommendations.results.shutter_speed.percentage_taken_at_lowest_value }}% of the time.
+                Exceeding this rule can lead to blurry shots if your gear isn’t stabilized.
+                <br>
+                Your most used shutter speed is {{ recommendations.results.shutter_speed.human_readable_mode }}.
+            </p>
+        </div>
+        {% endif %}
+
+    </div>
+
+<br>
+<div class="row">
+    {% if recommendations.results.exposure %}
+        <div class="col-md-2"></div>
+    <div class="col-md-8">
+        <h5>
+            Illuminance
+            <i class="bi bi-question-circle-fill tooltip-icon" data-bs-toggle="tooltip" title="Environmental light - How bright your shooting conditions are"></i>
+            {{ recommendations.results.exposure.percentage_taken_at_lowest_value }}%
+        </h5>
+        <footer class="blockquote-footer padded-footer">
+            {% if recommendations.results.exposure.percentage_taken_at_lowest_value < 20 %}
+            "Fun in the sun"
+            {% endif %}
+            {% if recommendations.results.exposure.percentage_taken_at_lowest_value >= 20 and recommendations.results.exposure.percentage_taken_at_lowest_value < 40 %}
+            "I'm not afraid of the dark"
+            {% endif %}
+            {% if recommendations.results.exposure.percentage_taken_at_lowest_value >= 40 %}
+            ”When it is darkest, men see the stars” - Ralph Waldo Emerson
+            {% endif %}
+        </footer>
+        <p>
+            You take pictures in darker conditions {{ recommendations.results.exposure.percentage_taken_at_lowest_value }}% of the time.
+            <br>
+            Here's a breakdown of the light conditions you shoot in:
+            {%  for classification, spec in recommendations.results.exposure.illuminance.items() %}
+
+                <div class="row">
+                    <div class="col-md-6 text-end">
+                        {{ classification }} - {{ spec['percentage'] }}%
+                    </div>
+                    <div class="col-md-6 progress-bar-container"
+                         id="container{{ classification | replace(' ', '') | replace('/', '') }}"
+                         data-percentage="{{ spec['percentage'] }}">
+                    </div>
+
+                </div>
+            {% endfor %}
+        </p>
+
+    </div>
+    {% endif %}
+</div>
+
+</div>
+
+<br>
+

@@ -1,0 +1,60 @@
+{# Camera Bodies Section #}
+{% import 'macros/_gear_macros.html' as gear_macros %}
+<div>
+    <div class="row">
+        <div class="pt-100">
+            <h3 id="your-current-gear-anchor">Your current gear</h3>
+            <hr>
+        </div>
+        <h4>
+            Estimated total kit value
+            <strong>{{ total_kit_value }}</strong>
+            <i class="bi bi-question-circle-fill tooltip-icon" data-bs-toggle="tooltip" title="Approximate resale value of your gear. These values may change depending on condition"></i>
+        </h4>
+        <div class="col-md-6 px-4 py-5 my-5">
+            <h4>
+                Cameras
+                - <span class="themed-text">{{ kit.cameras | length }}</span>
+            </h4>
+            <br>
+            <footer class="blockquote-footer padded-footer">"The best camera is the one you have with you"</footer>
+            <ul>
+                {% for camera in kit.cameras %}
+                    {{ gear_macros.render_gear_item(camera, kit.camera_frequency[camera.model]["percentage_of_all"], 'camera') }}
+                {% endfor %}
+            </ul>
+        </div>
+
+        {# Lenses Section #}
+        <div class="col-md-6 px-4 py-5 my-5">
+            <h4>
+                Lenses
+                - <span class="themed-text">{{ kit.lenses | length }}</span>
+            </h4>
+            <br>
+            <footer class="blockquote-footer padded-footer">"Date the body, mary the lenses"</footer>
+            <p>
+                <h5>
+                    Zooms
+                    <i class="bi bi-question-circle-fill tooltip-icon" data-bs-toggle="tooltip" title="A zoom lens is a lens with a variable focal length - it can zoom"></i>
+                    - {{ kit.zooms | length }}
+                </h5>
+                {% for lens in kit.zooms %}
+                    {{ gear_macros.render_gear_item(lens, kit.lens_frequency[lens.model]["percentage_of_all"], 'lens') }}
+                {% endfor %}
+
+        <br>
+
+                <h5>
+                    Primes
+                    <i class="bi bi-question-circle-fill tooltip-icon" data-bs-toggle="tooltip" title="A prime lens is a lens with a fixed focal length - it doesn't zoom"></i>
+                    - {{ kit.primes | length }}
+                </h5>
+                {% for lens in kit.primes %}
+                    {{ gear_macros.render_gear_item(lens, kit.lens_frequency[lens.model]["percentage_of_all"], 'lens') }}
+                {% endfor %}
+            </p>
+        </div>
+    </div>
+
+</div>

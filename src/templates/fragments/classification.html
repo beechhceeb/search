@@ -1,0 +1,63 @@
+<div class="mb-4">
+<div class="results-wrapper">
+    <h3 id="your-classification-anchor">
+        Your classification
+        <i class="bi bi-question-circle-fill tooltip-icon" data-bs-toggle="tooltip" title="Your photographer type based on image data" aria-label="Your photographer type based on image data">
+            <span class="visually-hidden">Your photographer type based on image data</span>
+        </i>
+    </h3>
+    <hr>
+</div>
+<div class="text-center card shadow-sm" id="classification-box" >
+  <div class="banner-badge card-header" style="background-color: {{ photographer_classification.styling["colour_1"] }}">
+      <div class="row">
+          <div class="col-3">
+                <div id="hidden-mpb-logo">
+                {% include 'fragments/mpb-logo.html' %}
+                  </div>
+            </div>
+        <div class="col-6">
+          <div>
+              <i id="icon" class="bi {{ photographer_classification.styling["icon"] }} classification-icon"></i>
+          </div>
+        </div>
+      <h1 class="display-5 fw-bold classification-title"> You are: {{ photographer_classification.name }}</h1>
+      <p class="lead fw-medium">{{ photographer_classification.description }}</p>
+      <p class="">{{ photographer_classification.blurb }}</p>
+
+    </div>
+  </div>
+    <div class="score-wrapper">
+            <div class="row">
+                <div class="col-md-6 col-12 runners-up">
+                <div class="scores-header">
+                    <h4>Classification Scores</h4>
+                    <hr>
+                </div>
+                {% for classification, score in scores.items() %}
+                    <div class="row">
+                        <div class="col-md-6 text-end">
+                            {{ classification }} - {{ score }}%
+                        </div>
+                        <div class="col-md-6 progress-bar-container"
+                             id="container{{ classification | replace(' ', '') }}"
+                             data-percentage="{{ score }}">
+                        </div>
+
+                    </div>
+                 {% endfor %}
+                </div>
+                <div class="col-md-5 col-12">
+
+                    <div class="insights-container">
+                        {% for achievement in achievements %}
+                        <div class="insight-badge">
+                          <div class="insight-icon"></div>
+                          <div class="insight-text">{{ achievement.name }}</div>
+                        </div>
+                        {%  endfor %}
+                      </div>
+                </div>
+            </div>
+    </div>
+</div>

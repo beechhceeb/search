@@ -1,0 +1,482 @@
+:root {
+    --primary-color: rgb(0, 49, 68);
+    --secondary-color: rgb(255, 0, 107);
+    --tertiary-color: rgb(125, 93, 168);
+    --highlight-color: rgb(255, 209, 103);
+    --font-family: sofia-pro, sans-serif;
+    --font-weight-light: 300;
+    --font-weight-bold: 600;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    scroll-behavior: smooth;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-family);
+    font-weight: var(--font-weight-light);
+}
+
+h1, h2, h4, h5 {
+    font-weight: var(--font-weight-bold);
+}
+
+h3 {
+    scroll-margin-top: 150px;
+    font-weight: var(--font-weight-bold);
+}
+
+#main-content, #results-wrapper {
+    flex: 1;
+}
+
+#main-content {
+    margin-top: 8vh;
+}
+
+.progressContainer {
+    margin: 20vh 10vw 0;
+    flex: 1;
+}
+
+div.header-banner, div.footer-banner {
+    background-color: var(--primary-color);
+    height: 90px;
+    color: white;
+    text-align: center;
+    width:100vw
+}
+
+.alert-custom {
+    font-weight: bold;
+}
+
+div.centered-content {
+    text-align: left;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+#progressContainer, .progress-bar-container {
+    height: 20px;
+    margin-bottom: 1rem;
+}
+
+footer.blockquote-footer {
+    padding-top: 1rem;
+}
+
+span.note, .focal-note {
+    vertical-align: super;
+    font-size: 10pt;
+    margin-bottom: 20pt;
+}
+
+div.section-padding, .section-padding {
+    padding-top: 70px;
+}
+
+p.disclaimer {
+    font-size: 10pt;
+    font-style: italic;
+    margin: 20px 0;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
+.insights-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-right: 50px;
+}
+
+.insight-badge {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.insight-icon {
+    font-size: 1.5rem;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: #eef2ff;
+    color: #4f46e5;
+}
+
+.insight-text {
+    font-size: 0.95rem;
+    color: #333;
+}
+
+div.chart-container {
+    height: 700px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+json-viewer {
+    --background-color: #EEEEEE;
+    --color: #333333;
+    --font-family: Nimbus Mono PS, Courier New, monospace;
+    --font-size: 1rem;
+    --line-height: 1.2rem;
+    --indent-size: 0.5em;
+    --indentguide: 1px solid #333;
+    --indentguide-active: 1px solid #666;
+    --outline-color: #e0e4e5;
+    --outline-width: 1px;
+    --outline-style: dotted;
+    --string-color: #83be80;
+    --number-color: #a16a36;
+    --boolean-color: #1b87bf;
+    --null-color: #af6cc3;
+    --property-color: #3f83a2;
+    --preview-color: #deae8f;
+    --highlight-color: #c92a2a;
+}
+
+.camera-details {
+    transition: all 0.3s ease;
+    margin: 0.5rem 0;
+}
+
+.camera-details.collapsed {
+    display: none;
+}
+
+.shooting-challenge {
+    background-color: #fafafa;
+    border-left: 5px solid #34c38f;
+    border-radius: 8px;
+}
+
+.shooting-challenge svg {
+    flex-shrink: 0;
+}
+
+.btn {
+    cursor: pointer;
+}
+
+.btn-cta {
+    background: linear-gradient(245.4deg, var(--secondary-color) -35.27%, var(--tertiary-color) 114.73%);
+    color: white;
+}
+
+#share-classification-button {
+    margin-top: 0.8rem;
+}
+
+div.score-wrapper {
+    padding-top: 15px;
+    font-size: 10pt;
+}
+
+div.banner-badge {
+    border-radius: 8px;
+    color: white;
+    padding: 1rem;
+    background: linear-gradient(245.4deg, var(--secondary-color) -35.27%, var(--tertiary-color) 114.73%);
+}
+
+#results-title {
+    color: var(--highlight-color);
+    font-size: 2.5rem;
+    padding-top: 20px;
+}
+
+div.results-wrapper, #classification-box {
+    max-width: 60vw;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    div.results-wrapper, #classification-box {
+        max-width: 100%;
+    }
+}
+
+#classification-box {
+    background-color: #fafafa;
+    padding-bottom: 15px;
+    margin-bottom: 50px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border: 0;
+}
+
+.card, .alert {
+    position: static;
+}
+
+.sidebar {
+    top: 100px;
+    width: 220px;
+    margin: 42px 0 0 20px;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        top: 100px;
+        left: 0;
+        width: 100%;
+        margin: 0 0 0 0;
+        padding: 10px;
+    }
+}
+
+#toggle-sidebar {
+    position: fixed;
+    top: 100px;
+    left: 20px;
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 50%;
+    margin-top: -77px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin-left: -20px;
+}
+
+.sidebar li {
+    margin-bottom: 1rem;
+}
+
+.sidebar a:hover {
+    text-decoration: underline;
+}
+
+/* Highlight the link of the section currently in view */
+.sidebar a.active {
+    font-weight: bold;
+}
+
+div.side-shift {
+    padding-top: 150px;
+    margin-left: 150px;
+}
+
+@media (max-width: 768px) {
+    div.side-shift {
+        margin-left: 10px;
+        margin-top: 0;
+        margin-right: 10px
+    }
+}
+
+div.runners-up{
+    background-color: white;
+    border-radius: 12px;
+    margin-left:20px
+}
+
+@media (max-width: 768px) {
+    div.runners-up{
+        margin-left:0px
+    }
+}
+
+div.fixed-overlay {
+    position: fixed;
+    z-index: 999;
+    top: 0;
+    height: 0;
+}
+
+div.header-divider {
+    height: 5px;
+    width: 100%;
+    background: linear-gradient(245.4deg, var(--secondary-color) -35.27%, var(--tertiary-color) 114.73%);
+}
+
+#share-modal {
+    z-index: 1000;
+}
+
+.mpb-logo {
+    transition: width 0.3s ease-in-out, height 0.3s ease-in-out;
+    display: block;
+    position: relative;
+    width: 8rem;
+    height: auto;
+    padding: 1rem;
+    padding-left:0;
+}
+
+@media (max-width: 768px) {
+    #mpb-logo-header-container {
+        margin-left: 6rem;
+    }
+}
+
+#hidden-mpb-logo{
+    display:none;
+}
+
+button.modal-close{
+    background: transparent;
+    border-color: transparent;
+    border-radius: 100%;
+    cursor: pointer;
+    display: inline-flex;
+    margin-left: 450px;
+}
+
+button.share-method{
+    background: transparent;
+    border-color: transparent;
+    border-radius: 100%;
+    cursor: pointer;
+    display: inline-flex;
+}
+
+#share-modal{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.6);
+    justify-content:center;
+    align-items:center;
+}
+
+.mt-20vh {
+    margin-top: 20vh;
+}
+
+.mt-20px {
+    margin-top: 20px;
+}
+
+.progress-wrapper {
+    padding-left: 10vw;
+    padding-right: 10vw;
+    flex: 1;
+}
+
+#progressContainer {
+    display: none;
+}
+
+.link-block {
+    display: block;
+}
+
+.mask-alpha {
+    mask-type: alpha;
+}
+
+.mt-2em {
+    margin-top: 2em;
+}
+
+.share-modal-content {
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+}
+
+.icon-svg {
+    pointer-events: none;
+    display: inherit;
+    width: 100%;
+}
+
+.share-icon {
+    pointer-events: none;
+    display: inherit;
+    width: 50px;
+    height: 100%;
+}
+
+#preview-canvas {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.pb-30 {
+    padding-bottom: 30px;
+}
+
+.pt-100 {
+    padding-top: 100px;
+}
+
+.classification-icon {
+    font-size: 4rem;
+}
+
+/* Ensure tooltip icons are consistently sized and coloured */
+.tooltip-icon {
+    color: black;
+    font-size: 0.85em;
+    cursor: help;
+}
+
+.classification-title {
+    font-size: 45pt;
+}
+
+.scores-header {
+    text-align: left;
+    margin-bottom: 20px;
+    margin-left: 70px;
+    padding-top: 20px;
+}
+
+#discreteChartContainer {
+    display: none;
+}
+
+json-viewer.static-position {
+    position: static;
+}
