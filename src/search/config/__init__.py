@@ -1,14 +1,10 @@
 import logging
 import os
+from dotenv import load_dotenv
 
-try:  # pragma: no cover - optional dependency
-    from dotenv import load_dotenv
+load_dotenv()
 
-    load_dotenv()
-except ModuleNotFoundError:  # pragma: no cover - handle missing dependency
-    pass
 
-# Set up logging configuration before we import other modules
 logging.basicConfig(
     level="DEBUG" if os.getenv("DEBUG", False) else "INFO",
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -19,7 +15,4 @@ logging.basicConfig(
 
 log = logging.getLogger(__name__)
 
-from .config import *  # noqa: F403 E402
-from .exif import *  # noqa: F403 E402
-from .llm import *  # noqa: F403 E402
-from .service import *  # noqa: F403 E402
+from .config import *  # noqa: E402, F403
