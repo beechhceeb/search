@@ -7,6 +7,7 @@ from search.config import (
     QUERY_FILE,
     RAW_DB_SAVE_PATH,
     PROD_DB_SAVE_PATH,
+    RESULTS_SAVE_PATH,
     RELOAD,
     MARKET,
 )
@@ -95,10 +96,9 @@ matcher_weights = {
 
 query = "Canon  5D  IV"
 log.info(f"Searching for query: '{query}'")
-for i in tqdm(range(100), desc="Searching", unit="query"):
+for i in tqdm(range(1), desc="Searching", unit="query"):
     results = search_engine.search_multi(
-        query, matcher_weights=matcher_weights, top_k=10, profile=True
+        query, matcher_weights=matcher_weights, top_k=10
     )
-log.info(
-    f"Search results for query '{query}':\n{results[['model_name', 'combined_score']].head(10)}"
-)
+results.drop(columns=["model_name_embedding", "blob_embedding"], inplace=True, errors='ignore')
+results.to_csv(RESULTS_SAVE_PATH, index=False)

@@ -28,6 +28,7 @@ BQ_SQL_FOLDER = ROOT / "sql"
 QUERY_FILE = "get_raw_model_database"
 RAW_DB_SAVE_PATH = ROOT / "data" / "db_raw.parquet"
 PROD_DB_SAVE_PATH = ROOT / "data" / "db_prod.parquet"
+RESULTS_SAVE_PATH = ROOT / "data" / "results.csv"
 LIMIT = None
 RELOAD = True
 

@@ -35,7 +35,7 @@ class FuzzyMatcher(MatcherBase):
         self.choices = self.df[self.column].astype(str).tolist()
 
     def match(self, query: str) -> list[float]:
-        scores = [fuzz.WRatio(query, choice) for choice in self.choices]
+        scores = [fuzz.WRatio(query, choice) / 100.0 for choice in self.choices]
         return scores
 
 

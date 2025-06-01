@@ -40,7 +40,13 @@ class SearchEngine:
             n = len(self.dataset.df)
             combined_score = np.zeros(n, dtype=float)
             all_scores = {}
-            for matcher, weight in matcher_weights.items():
+            # Normalize matcher weights to sum to 1
+            total_weight = sum(matcher_weights.values())
+            if total_weight == 0:
+                log.error("Matcher weights sum to zero. Cannot normalize.")
+                return pd.DataFrame()
+            norm_weights = {k: v / total_weight for k, v in matcher_weights.items()}
+            for matcher, weight in norm_weights.items():
                 if matcher not in self.matchers:
                     log.warning(f"Matcher '{matcher}' not found, skipping.")
                     continue

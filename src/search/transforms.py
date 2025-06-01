@@ -60,7 +60,7 @@ def log_normalise(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
         log.info(
             f"Original range for column '{col}': {df[col].min()} - {df[col].max()}"
         )
-        df[col] = np.log1p(df[col] / np.log1p(df[col].max()))
+        df[col] = np.log1p(df[col]) / np.log1p(df[col]).max()
         log.info(
             f"Normalised range for column '{col}': {df[col].min()} - {df[col].max()}"
         )
