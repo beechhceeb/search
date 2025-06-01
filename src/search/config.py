@@ -26,10 +26,10 @@ BQ_DAW_DATASET_ID = "dsci_daw"
 BQ_SQL_FOLDER = ROOT / "sql"
 
 QUERY_FILE = "get_raw_model_database"
-RAW_DB_SAVE_PATH = ROOT / "data" / "db_raw.csv"
-PROD_DB_SAVE_PATH = ROOT / "data" / "db_prod.csv"
-LIMIT = 100
-RELOAD = False
+RAW_DB_SAVE_PATH = ROOT / "data" / "db_raw.parquet"
+PROD_DB_SAVE_PATH = ROOT / "data" / "db_prod.parquet"
+LIMIT = None
+RELOAD = True
 
 
 SCHEMA_COLUMNS = [

@@ -38,7 +38,7 @@ class Pipeline:
         return df
 
 
-def build_pipeline() -> Pipeline:
+def build_pipeline(model: SentenceTransformerWrapper) -> Pipeline:
     """
     Build and return the default search pipeline.
     """
@@ -48,7 +48,6 @@ def build_pipeline() -> Pipeline:
     pipeline.add_step(normalise, columns=TEXT_COLUMNS)
     pipeline.add_step(blob, columns_to_blob=TEXT_COLUMNS, blob_column="blob")
     pipeline.add_step(remove_duplicates, columns=["blob"])
-    model = SentenceTransformerWrapper(model_name="all-MiniLM-L6-v2")
     pipeline.add_step(model.embed_columns, columns=["model_name", "blob"])
     pipeline.add_step(log_normalise, columns=["count_of_buy_products"])
     return pipeline

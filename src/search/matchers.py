@@ -4,108 +4,105 @@ import numpy as np
 from .transformers import TransformerBase
 
 # For fuzzy matching
-from rapidfuzz import process, fuzz
+from rapidfuzz import fuzz
 
 # For semantic matching
-from numpy.linalg import norm
+
+import faiss
 
 
 class MatcherBase(ABC):
     """
-    Abstract base class for all matchers.
+    Abstract base class for all matchers. Stores the DataFrame at initialization.
     """
+    def __init__(self, df: pd.DataFrame):
+        self.df = df
 
     @abstractmethod
-    def match(self, query: str, df: pd.DataFrame, top_k: int = 10) -> pd.DataFrame:
+    def match(self, query: str) -> list[float]:
         pass
 
 
 class FuzzyMatcher(MatcherBase):
     """
     Fuzzy matcher using rapidfuzz to match query against a text column (e.g., 'blob').
+    Returns a list of scores (float), same length and order as df.
+    Stores the choices at initialization for speed.
     """
-
-    def __init__(self, column: str):
+    def __init__(self, column: str, df: pd.DataFrame):
+        super().__init__(df)
         self.column = column
+        self.choices = self.df[self.column].astype(str).tolist()
 
-    def match(self, query: str, df: pd.DataFrame, top_k: int = 10) -> pd.DataFrame:
-        # Get the column as a list
-        choices = df[self.column].astype(str).tolist()
-        # Get scores and indices
-        results = process.extract(query, choices, scorer=fuzz.WRatio, limit=top_k)
-        # results: List of (match_str, score, idx)
-        indices = [idx for _, _, idx in results]
-        scores = [score for _, score, _ in results]
-        result_df = df.iloc[indices].copy()
-        result_df["fuzzy_score"] = scores
-        return result_df.sort_values("fuzzy_score", ascending=False).reset_index(
-            drop=True
-        )
+    def match(self, query: str) -> list[float]:
+        scores = [fuzz.WRatio(query, choice) for choice in self.choices]
+        return scores
 
 
 class SemanticMatcher(MatcherBase):
     """
     Semantic matcher using cosine similarity on embedding columns.
-    Assumes df has a column with precomputed embeddings (e.g., 'blob_embedding').
+    Uses FAISS for fast nearest neighbor search if available.
+    Returns a list of scores (float), same length and order as df.
+    Now builds and stores the FAISS index and id map once at init.
     """
-
-    def __init__(self, embedding_column: str, encoder: TransformerBase):
+    def __init__(self, embedding_column: str, encoder: TransformerBase, df: pd.DataFrame):
+        super().__init__(df)
         self.embedding_column = embedding_column
         self.encoder = encoder
+        self.faiss_index = None
+        self.faiss_id_map = None
+        self._build_faiss(df)
 
-    def match(self, query: str, df: pd.DataFrame, top_k: int = 10) -> pd.DataFrame:
-        # Encode the query
-        query_emb = np.array(self.encoder.encode_one(query))
-        # Stack all embeddings from the DataFrame
-        emb_matrix = np.stack(df[self.embedding_column].values)
-        # Compute cosine similarity
-        dot = emb_matrix @ query_emb
-        emb_norms = norm(emb_matrix, axis=1)
-        query_norm = norm(query_emb)
-        scores = dot / (emb_norms * query_norm + 1e-8)
-        # Get top_k indices
-        top_idx = np.argsort(scores)[::-1][:top_k]
-        result_df = df.iloc[top_idx].copy()
-        result_df["semantic_score"] = scores[top_idx]
-        return result_df.sort_values("semantic_score", ascending=False).reset_index(
-            drop=True
-        )
+    def _build_faiss(self, df: pd.DataFrame):
+        emb_matrix = np.stack(df[self.embedding_column].values).astype(np.float32)
+        index = faiss.IndexFlatIP(emb_matrix.shape[1])  # Cosine similarity via inner product
+        faiss.normalize_L2(emb_matrix)
+        index.add(emb_matrix)
+        self.faiss_index = index
+        # Use positional indices for id map to avoid index mismatch
+        self.faiss_id_map = np.arange(len(df))
+
+    def match(self, query: str) -> list[float]:
+        query_emb = np.array(self.encoder.encode_one(query)).astype(np.float32)
+        faiss.normalize_L2(query_emb.reshape(1, -1))
+        k = len(self.faiss_id_map)
+        D, I = self.faiss_index.search(query_emb.reshape(1, -1), k)
+        scores = np.zeros(len(self.faiss_id_map), dtype=float)
+        for arr_idx, score in zip(I[0], D[0]):
+            if arr_idx < len(self.faiss_id_map):
+                scores[arr_idx] = score
+        return scores.tolist()
+      
 
 
 class ExactMatcher(MatcherBase):
     """
-    Exact matcher that filters DataFrame rows based on exact match of a query string
-    against a specified column.
+    Exact matcher that returns 1.0 if the query is a substring of the column value (case-insensitive), 0.0 otherwise.
+    Returns a list of scores (float), same length and order as df.
     """
-
-    def __init__(self, column: str):
+    def __init__(self, column: str, df: pd.DataFrame):
+        super().__init__(df)
         self.column = column
+        self.col_values = self.df[self.column]
 
-    def match(self, query: str, df: pd.DataFrame, top_k: int = 10) -> pd.DataFrame:
-        result_df = df[df[self.column].str.contains(query, case=False, na=False)]
-        return (
-            result_df.head(top_k).reset_index(drop=True)
-            if not result_df.empty
-            else pd.DataFrame()
-        )
+    def match(self, query: str) -> list[float]:
+        query_lower = query.lower()
+        matches = self.col_values.str.contains(query_lower)
+        scores = matches.astype(float).tolist()
+        return scores
 
 
 class PopularMatcher(MatcherBase):
     """
-    Popular matcher that returns the top K most popular items based on a specified popularity column.
+    Popular matcher that returns normalized popularity as a list of scores.
+    Returns a list of scores (float), same length and order as df.
+    Stores the popularity column as a numpy array for fast access.
     """
-
-    def __init__(self, popularity_column: str):
+    def __init__(self, popularity_column: str, df: pd.DataFrame):
+        super().__init__(df)
         self.popularity_column = popularity_column
+        self.scores = self.df[self.popularity_column].to_numpy()
 
-    def match(self, query: str, df: pd.DataFrame, top_k: int = 10) -> pd.DataFrame:
-        if self.popularity_column not in df.columns:
-            raise ValueError(
-                f"Column '{self.popularity_column}' not found in DataFrame."
-            )
-        result_df = df.sort_values(by=self.popularity_column, ascending=False)
-        return (
-            result_df.head(top_k).reset_index(drop=True)
-            if not result_df.empty
-            else pd.DataFrame()
-        )
+    def match(self, query: str) -> list[float]:
+        return self.scores.tolist()

@@ -30,7 +30,7 @@ with
         from `{read_project}.{daw_dataset}.model_performance_group_history`
       )
       -- Currently filtering out models that are not in the top 100 or best seller groups
-      and performance_group in ('Top 100', 'Best Seller')
+      -- and performance_group in ('Top 100', 'Best Seller')
   )
 
 select

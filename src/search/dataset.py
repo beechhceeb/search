@@ -38,7 +38,7 @@ class Dataset:
         """
         if self.save_path and os.path.exists(self.save_path) and not reload:
             log.info(f"Loading dataset from CSV: {self.save_path}")
-            self._df = pd.read_csv(self.save_path)
+            self._df = pd.read_parquet(self.save_path)
         else:
             if not self.bq_helper:
                 raise ValueError(
@@ -70,7 +70,7 @@ class Dataset:
 
         os.makedirs(os.path.dirname(path), exist_ok=True)
         log.info(f"Writing DataFrame to CSV: {path}")
-        self._df.to_csv(path, index=False)
+        self._df.to_parquet(path, index=False)
         log.info(f"Write complete: {path}")
 
     def summary(self) -> pd.DataFrame:
