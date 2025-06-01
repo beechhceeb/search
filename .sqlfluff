@@ -1,0 +1,46 @@
+[sqlfluff]
+dialect = bigquery
+templater = python
+max_line_length = None
+exclude_rules = AM04, AM06, RF01, RF02, RF04, LT05, ST10, AL05, ST07
+large_file_skip_byte_limit = 0
+
+[sqlfluff:templater:python:context]
+table = _table_
+start_dt = _start_dt_
+end_dt = _end_dt_
+threshhold = _threshhold_
+n_models_min = _n_models_min_
+read_project = _read_project_
+read_dataset = _read_dataset_
+daw_dataset = _daw_dataset_
+
+[sqlfluff:indentation]
+indent_unit = space
+tab_space_size = 2
+indented_joins = True
+indented_ctes = True
+indented_using_on = True
+indented_on_contents = False
+indented_then = True
+indented_then_contents = True
+
+[sqlfluff:layout:type:comma]
+spacing_before = touch
+line_position = leading
+
+[sqlfluff:rules:capitalisation.keywords]
+capitalisation_policy = lower
+
+[sqlfluff:rules:capitalisation.identifiers]
+extended_capitalisation_policy = lower
+unquoted_identifiers_policy = all
+
+[sqlfluff:rules:capitalisation.functions]
+extended_capitalisation_policy = lower
+
+[sqlfluff:rules:capitalisation.literals]
+capitalisation_policy = lower
+
+[sqlfluff:rules:capitalisation.types]
+extended_capitalisation_policy = lower

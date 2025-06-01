@@ -1,15 +1,27 @@
 [project]
 name = "search"
 version = "0.1.0"
-description = "Add your description here"
+description = "Search endpoint for Cameras and Lenses"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "dotenv>=0.9.9",
+    "dsci-utilities",
+    "faiss-cpu>=1.11.0",
     "flask>=3.1.1",
+    "numpy>=2.2.6",
+    "pandas>=2.2.3",
+    "rapidfuzz>=3.13.0",
+    "sentence-transformers>=4.1.0",
 ]
 
 [dependency-groups]
 dev = [
     "ruff>=0.11.12",
+    "search",
+    "sqlfluff>=3.4.0",
 ]
+
+[tool.uv.sources]
+dsci-utilities = { git = "https://github.com/mpb-com/dsci-utilities.git" }
+search = { workspace = true }
