@@ -53,14 +53,14 @@ def drop_na(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
 
 def log_normalise(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
     """
-    Normalises specified columns in the DataFrame by converting to lowercase and stripping whitespace.
+    Normalises specified columns in the DataFrame by log1p and scales to [0,1], rounded to 3 decimal places.
     """
     log.info(f"Normalising columns: {columns}")
     for col in columns:
         log.info(
             f"Original range for column '{col}': {df[col].min()} - {df[col].max()}"
         )
-        df[col] = np.log1p(df[col]) / np.log1p(df[col]).max()
+        df[col] = (np.log1p(df[col]) / np.log1p(df[col]).max()).round(3)
         log.info(
             f"Normalised range for column '{col}': {df[col].min()} - {df[col].max()}"
         )

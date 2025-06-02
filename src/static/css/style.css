@@ -33,3 +33,57 @@ a:hover { text-decoration: underline; }
 .suggestion:hover {
     background: #f0f0f0;
 }
+.table-scroll {
+    overflow-x: auto;
+    margin-top: 2em;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    background: #fff;
+}
+.results-table {
+    width: 100%;
+    min-width: 900px;
+    border-collapse: collapse;
+    font-size: 0.97em;
+}
+.results-table th, .results-table td {
+    border: 1px solid #ddd;
+    padding: 0.5em 0.7em;
+    text-align: left;
+    max-width: 220px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.results-table th {
+    background: #f0f0f0;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+.results-table tr:nth-child(even) {
+    background: #fafafa;
+}
+.mpb-link-btn {
+    display: inline-block;
+    background: #007bff;
+    color: #fff;
+    padding: 0.5em 1.2em;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.2s;
+    margin-bottom: 1em;
+}
+.mpb-link-btn:hover {
+    background: #0056b3;
+}
+@media (max-width: 1100px) {
+    .results-table {
+        min-width: 600px;
+        font-size: 0.93em;
+    }
+    .container {
+        padding: 1em;
+    }
+}

@@ -66,8 +66,8 @@ class SearchEngine:
             results = self.dataset.df.iloc[top_idx].copy()
             # Add each individual matcher score column
             for col, arr in all_scores.items():
-                results[col] = arr[top_idx]
-            results["combined_score"] = combined_score[top_idx]
+                results[col] = np.round(arr[top_idx], 3)
+            results["combined_score"] = np.round(combined_score[top_idx], 3)
             results = results.reset_index(drop=True)
             log.info(f"Multi-matcher search complete. Returning {len(results)} results.")
             return results

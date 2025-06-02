@@ -9,12 +9,18 @@
     <div class="container">
         <h1>Results for "{{ query }}"</h1>
         <a href="/">&larr; New Search</a>
+        {% if mpb_link %}
+        <div style="margin: 1em 0;">
+            <a href="{{ mpb_link }}" target="_blank" class="mpb-link-btn">Search this on MPB &rarr;</a>
+        </div>
+        {% endif %}
         {% if results and results|length > 0 %}
-        <table>
+        <div class="table-scroll">
+        <table class="results-table">
             <thead>
                 <tr>
                     {% for col in results[0].keys() %}
-                    <th>{{ col }}</th>
+                        <th>{{ col }}</th>
                     {% endfor %}
                 </tr>
             </thead>
@@ -22,12 +28,13 @@
                 {% for row in results %}
                 <tr>
                     {% for value in row.values() %}
-                    <td>{{ value }}</td>
+                        <td>{{ value }}</td>
                     {% endfor %}
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        </div>
         {% else %}
         <p>No results found.</p>
         {% endif %}
