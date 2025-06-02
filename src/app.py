@@ -7,7 +7,6 @@ from search.config import (
     QUERY_FILE,
     RAW_DB_SAVE_PATH,
     PROD_DB_SAVE_PATH,
-    RESULTS_SAVE_PATH,
     RELOAD,
     MARKET,
 )
@@ -17,9 +16,9 @@ from search.pipeline import build_pipeline
 from search.matchers import FuzzyMatcher, SemanticMatcher, ExactMatcher, PopularMatcher
 from search.transformers import SentenceTransformerWrapper
 from search.engine import SearchEngine
-from tqdm import tqdm
 import os
 import pandas as pd
+from flask import Flask, render_template, request, jsonify
 
 log.info("Starting dataset processing...")
 
@@ -75,9 +74,9 @@ search_engine = SearchEngine(
     matchers={
         "fuzzy_model": fuzzy_model,
         "fuzzy_brand": fuzzy_brand,
-        "fuzzy_blob": fuzzy_blob,
+        # "fuzzy_blob": fuzzy_blob,
         "semantic_model": semantic_model,
-        "semantic_blob": semantic_blob,
+        # "semantic_blob": semantic_blob,
         "exact_model": exact_model,
         "exact_blob": exact_blob,
         "popular": popular,
@@ -85,20 +84,52 @@ search_engine = SearchEngine(
 )
 matcher_weights = {
     "fuzzy_model": 0.5,
-    "fuzzy_brand": 0.3,
-    "fuzzy_blob": 0.2,
+    "fuzzy_brand": 0.1,
+    # "fuzzy_blob": 0.2,
     "semantic_model": 0.4,
-    "semantic_blob": 0.4,
+    # "semantic_blob": 0.4,
     "exact_model": 0.1,
     "exact_blob": 0.1,
     "popular": 0.2,
 }
 
-query = "Canon  5D  IV"
-log.info(f"Searching for query: '{query}'")
-for i in tqdm(range(1), desc="Searching", unit="query"):
-    results = search_engine.search_multi(
-        query, matcher_weights=matcher_weights, top_k=10
-    )
-results.drop(columns=["model_name_embedding", "blob_embedding"], inplace=True, errors='ignore')
-results.to_csv(RESULTS_SAVE_PATH, index=False)
+app = Flask(__name__)
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        query = request.form.get('query', '')
+        if not query:
+            return render_template('index.html', error='Please enter a search query.')
+        # Run search
+        results = search_engine.search_multi(
+            query, matcher_weights=matcher_weights, top_k=10
+        )
+        results.drop(columns=["model_name_embedding", "blob_embedding"], inplace=True, errors='ignore')
+        # Convert results to dict for template
+        results_list = results.to_dict(orient='records')
+        return render_template('results.html', query=query, results=results_list)
+    return render_template('index.html')
+
+@app.route('/suggest', methods=['POST'])
+def suggest():
+    data = request.get_json()
+    partial = data.get('partial', '').strip()
+    suggestions = []
+    try:
+        if not partial:
+            # If empty, show top 5 by popularity
+            pop_df = dataset.df.sort_values('count_of_buy_products', ascending=False)
+            suggestions = pop_df['model_name'].dropna().astype(str).head(10).tolist()
+        else:
+            # Use full search engine for suggestions, even for 1 letter
+            results = search_engine.search_multi(
+                partial, matcher_weights=matcher_weights, top_k=5
+            )
+            suggestions = results['model_name'].dropna().astype(str).tolist()
+    except Exception:
+        suggestions = []
+    return jsonify({'suggestions': suggestions})
+
+if __name__ == '__main__':
+    app.run(debug=True)

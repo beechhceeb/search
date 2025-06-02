@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Results for "{{ query }}"</h1>
+        <a href="/">&larr; New Search</a>
+        {% if results and results|length > 0 %}
+        <table>
+            <thead>
+                <tr>
+                    {% for col in results[0].keys() %}
+                    <th>{{ col }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in results %}
+                <tr>
+                    {% for value in row.values() %}
+                    <td>{{ value }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No results found.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

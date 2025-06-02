@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Engine</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container" style="position:relative;">
+        <h1>Smart Search</h1>
+        {% if error %}<div class="error">{{ error }}</div>{% endif %}
+        <form method="post" action="/" autocomplete="off">
+            <input type="text" name="query" placeholder="Enter your search query" required autofocus autocomplete="off">
+            <button type="submit">Search</button>
+        </form>
+    </div>
+    <script src="/static/js/suggest.js"></script>
+</body>
+</html>

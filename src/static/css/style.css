@@ -1,0 +1,35 @@
+body { font-family: Arial, sans-serif; background: #f7f7f7; }
+.container { max-width: 800px; margin: 40px auto; background: #fff; padding: 2em; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+h1 { text-align: center; }
+form { display: flex; justify-content: center; gap: 1em; margin-bottom: 2em; }
+input[type="text"] { width: 60%; padding: 0.5em; border: 1px solid #ccc; border-radius: 4px; }
+button { padding: 0.5em 1.5em; border: none; background: #007bff; color: #fff; border-radius: 4px; cursor: pointer; }
+button:hover { background: #0056b3; }
+table { width: 100%; border-collapse: collapse; margin-top: 2em; }
+th, td { border: 1px solid #ddd; padding: 0.5em; text-align: left; }
+th { background: #f0f0f0; }
+tr:nth-child(even) { background: #fafafa; }
+.error { color: #b00; text-align: center; margin-bottom: 1em; }
+a { display: inline-block; margin-bottom: 1em; color: #007bff; text-decoration: none; }
+a:hover { text-decoration: underline; }
+.suggestion-box {
+    position: absolute;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 0 0 4px 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    width: 60%;
+    max-width: 480px;
+    z-index: 10;
+    left: 20%;
+    top: 100%;
+    margin-top: -8px;
+    display: none;
+}
+.suggestion {
+    padding: 0.5em 1em;
+    cursor: pointer;
+}
+.suggestion:hover {
+    background: #f0f0f0;
+}
