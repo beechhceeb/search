@@ -15,6 +15,7 @@ class MatcherBase(ABC):
     """
     Abstract base class for all matchers. Stores the DataFrame at initialization.
     """
+
     def __init__(self, df: pd.DataFrame):
         self.df = df
 
@@ -29,13 +30,16 @@ class FuzzyMatcher(MatcherBase):
     Returns a list of scores (float), same length and order as df.
     Stores the choices at initialization for speed.
     """
+
     def __init__(self, column: str, df: pd.DataFrame):
         super().__init__(df)
         self.column = column
         self.choices = self.df[self.column].astype(str).tolist()
 
     def match(self, query: str) -> list[float]:
-        scores = [round(fuzz.WRatio(query, choice) / 100.0, 3) for choice in self.choices]
+        scores = [
+            round(fuzz.WRatio(query, choice) / 100.0, 3) for choice in self.choices
+        ]
         return scores
 
 
@@ -46,7 +50,10 @@ class SemanticMatcher(MatcherBase):
     Returns a list of scores (float), same length and order as df.
     Now builds and stores the FAISS index and id map once at init.
     """
-    def __init__(self, embedding_column: str, encoder: TransformerBase, df: pd.DataFrame):
+
+    def __init__(
+        self, embedding_column: str, encoder: TransformerBase, df: pd.DataFrame
+    ):
         super().__init__(df)
         self.embedding_column = embedding_column
         self.encoder = encoder
@@ -56,7 +63,9 @@ class SemanticMatcher(MatcherBase):
 
     def _build_faiss(self, df: pd.DataFrame):
         emb_matrix = np.stack(df[self.embedding_column].values).astype(np.float32)
-        index = faiss.IndexFlatIP(emb_matrix.shape[1])  # Cosine similarity via inner product
+        index = faiss.IndexFlatIP(
+            emb_matrix.shape[1]
+        )  # Cosine similarity via inner product
         faiss.normalize_L2(emb_matrix)
         index.add(emb_matrix)
         self.faiss_index = index
@@ -67,13 +76,12 @@ class SemanticMatcher(MatcherBase):
         query_emb = np.array(self.encoder.encode_one(query)).astype(np.float32)
         faiss.normalize_L2(query_emb.reshape(1, -1))
         k = len(self.faiss_id_map)
-        D, I = self.faiss_index.search(query_emb.reshape(1, -1), k)
+        D, I = self.faiss_index.search(query_emb.reshape(1, -1), k)  # noqa: E741
         scores = np.zeros(len(self.faiss_id_map), dtype=float)
         for arr_idx, score in zip(I[0], D[0]):
             if arr_idx < len(self.faiss_id_map):
                 scores[arr_idx] = score
         return scores.tolist()
-      
 
 
 class ExactMatcher(MatcherBase):
@@ -81,6 +89,7 @@ class ExactMatcher(MatcherBase):
     Exact matcher that returns 1.0 if the query is a substring of the column value (case-insensitive), 0.0 otherwise.
     Returns a list of scores (float), same length and order as df.
     """
+
     def __init__(self, column: str, df: pd.DataFrame):
         super().__init__(df)
         self.column = column
@@ -99,6 +108,7 @@ class PopularMatcher(MatcherBase):
     Returns a list of scores (float), same length and order as df.
     Stores the popularity column as a numpy array for fast access.
     """
+
     def __init__(self, popularity_column: str, df: pd.DataFrame):
         super().__init__(df)
         self.popularity_column = popularity_column
