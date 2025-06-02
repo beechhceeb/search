@@ -1,66 +1,64 @@
+"""
+Flask app entry point. Routes only; business logic is in services/search_service.py.
+"""
 from flask import Flask, render_template, request, jsonify
-from search.bootstrap import search_engine, matcher_weights, dataset
+import logging
+from search.services import search_service
 
 app = Flask(__name__)
+log = logging.getLogger(__name__)
 
 
 @app.route("/", methods=["GET", "POST"])
 def index():
+    """Main search page and results."""
     if request.method == "POST":
         query = request.form.get("query", "")
         if not query:
-            pop_df = dataset.df.sort_values("count_of_buy_products", ascending=False)
-            results_list = pop_df.head(10).to_dict(orient="records")
+            results_list = search_service.get_popular_results()
             return render_template(
                 "index.html",
                 error="Please enter a search query.",
                 results=results_list,
                 query=query,
             )
-        results = search_engine.search_multi(
-            query, matcher_weights=matcher_weights, top_k=10
-        )
-        results.drop(
-            columns=[
-                "model_name_embedding",
-                "blob_embedding",
-                "blob",
-                "model_id",
-                "performance_group",
-                "market",
-                "count_of_buy_products",
-            ],
-            inplace=True,
-            errors="ignore",
-        )
-        results_list = results.to_dict(orient="records")
-        # Add mpb_link for the current query (not per row)
-        mpb_link = f"https://www.mpb.com/en-uk/search?q={query}" if query else ""
-        return render_template(
-            "results.html", query=query, results=results_list, mpb_link=mpb_link
-        )
-    pop_df = dataset.df.sort_values("count_of_buy_products", ascending=False)
-    results_list = pop_df.head(10).to_dict(orient="records")
+        try:
+            results_list = search_service.perform_search(query)
+            mpb_link = f"https://www.mpb.com/en-uk/search?q={query}" if query else ""
+            return render_template(
+                "results.html", query=query, results=results_list, mpb_link=mpb_link
+            )
+        except Exception as e:
+            log.error(f"Search error: {e}")
+            results_list = search_service.get_popular_results()
+            return render_template(
+                "index.html",
+                error="An error occurred during search.",
+                results=results_list,
+                query=query,
+            )
+    results_list = search_service.get_popular_results()
     return render_template("index.html", results=results_list, query="")
 
 
 @app.route("/suggest", methods=["POST"])
 def suggest():
+    """AJAX endpoint for search suggestions."""
     data = request.get_json()
     partial = data.get("partial", "")
-    suggestions = []
-    try:
-        if not partial:
-            pop_df = dataset.df.sort_values("count_of_buy_products", ascending=False)
-            suggestions = pop_df["model_name"].dropna().astype(str).head(10).tolist()
-        else:
-            results = search_engine.search_multi(
-                partial, matcher_weights=matcher_weights, top_k=10
-            )
-            suggestions = results["model_name"].dropna().astype(str).tolist()
-    except Exception:
-        suggestions = []
+    suggestions = search_service.get_suggestions(partial)
     return jsonify({"suggestions": suggestions})
+
+
+@app.errorhandler(500)
+def internal_error(error):
+    log.error(f"Internal server error: {error}")
+    return render_template(
+        "index.html",
+        error="Internal server error.",
+        results=search_service.get_popular_results(),
+        query="",
+    ), 500
 
 
 if __name__ == "__main__":
