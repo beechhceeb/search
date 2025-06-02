@@ -2,8 +2,8 @@
 Bootstrap module for initializing data, models, matchers, and the search engine.
 Encapsulates setup logic for modularity and testability.
 """
-from search.dataset import Dataset
-from search.config import (
+from core.dataset import Dataset
+from config.settings import (
     BQ_PROJECT_ID,
     BQ_DATASET_ID,
     BQ_DAW_DATASET_ID,
@@ -16,10 +16,10 @@ from search.config import (
     log,
 )
 from dsci_utilities import BQHelper
-from search.pipeline import build_pipeline
-from search.matchers import FuzzyMatcher, SemanticMatcher, ExactMatcher, PopularMatcher
-from search.transformers import SentenceTransformerWrapper
-from search.engine import SearchEngine
+from core.pipeline import build_pipeline
+from core.matchers import FuzzyMatcher, SemanticMatcher, ExactMatcher, PopularMatcher
+from core.transformers import SentenceTransformerWrapper
+from core.engine import SearchEngine
 import os
 import pandas as pd
 

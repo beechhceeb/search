@@ -2,7 +2,7 @@ import os
 import logging
 import pandas as pd
 from dsci_utilities import BQHelper
-from .config import Market, LIMIT
+from config.settings import Market, LIMIT
 from .pipeline import Pipeline
 
 log = logging.getLogger(__name__)

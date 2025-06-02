@@ -10,7 +10,7 @@ from .transforms import (
     log_normalise,
 )
 from .transformers import SentenceTransformerWrapper
-from .config import SCHEMA_COLUMNS, TEXT_COLUMNS, NOISE_WORDS
+from config.settings import SCHEMA_COLUMNS, TEXT_COLUMNS, NOISE_WORDS
 
 log = logging.getLogger(__name__)
 

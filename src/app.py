@@ -3,7 +3,7 @@ Flask app entry point. Routes only; business logic is in services/search_service
 """
 from flask import Flask, render_template, request, jsonify
 import logging
-from search.services import search_service
+from services import search_service
 
 app = Flask(__name__)
 log = logging.getLogger(__name__)

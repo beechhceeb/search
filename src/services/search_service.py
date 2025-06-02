@@ -4,7 +4,7 @@ Business logic for search and suggestion endpoints.
 import logging
 import functools
 import hashlib
-from search.bootstrap import search_engine, matcher_weights, dataset
+from bootstrap.bootstrap import search_engine, matcher_weights, dataset
 
 log = logging.getLogger(__name__)
 
