@@ -2,10 +2,12 @@
 Flask app entry point. Routes only; business logic is in services/search_service.py.
 """
 from flask import Flask, render_template, request, jsonify
+from flask_cors import CORS
 import logging
 from services import search_service
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "*"}})
 log = logging.getLogger(__name__)
 
 
@@ -62,4 +64,4 @@ def internal_error(error):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True)  # , host="0.0.0.0", port=8080)

@@ -6,13 +6,16 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "dotenv>=0.9.9",
-    "dsci-utilities",
     "faiss-cpu>=1.11.0",
     "flask>=3.1.1",
+    "flask-cors>=4.0.0",
+    "google-cloud-bigquery-storage>=2.32.0",
+    "google-cloud-bigquery>=3.34.0",
     "numpy>=2.2.6",
     "pandas>=2.2.3",
     "rapidfuzz>=3.13.0",
     "sentence-transformers>=4.1.0",
+    "pyarrow>=20.0.0",
 ]
 
 [dependency-groups]
@@ -23,5 +26,4 @@ dev = [
 ]
 
 [tool.uv.sources]
-dsci-utilities = { git = "https://github.com/mpb-com/dsci-utilities.git" }
 search = { workspace = true }

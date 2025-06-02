@@ -15,7 +15,7 @@ from config.settings import (
     MARKET,
     log,
 )
-from dsci_utilities import BQHelper
+from services.bq_helper import BQHelper
 from core.pipeline import build_pipeline
 from core.matchers import FuzzyMatcher, SemanticMatcher, ExactMatcher, PopularMatcher
 from core.transformers import SentenceTransformerWrapper

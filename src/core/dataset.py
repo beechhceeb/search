@@ -1,7 +1,7 @@
 import os
 import logging
 import pandas as pd
-from dsci_utilities import BQHelper
+from services.bq_helper import BQHelper
 from config.settings import Market, LIMIT
 from .pipeline import Pipeline
 
