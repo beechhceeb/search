@@ -13,7 +13,6 @@ from config.settings import (
     PROD_DB_SAVE_PATH,
     RELOAD,
     MARKET,
-    log,
 )
 from services.bq_helper import BQHelper
 from core.pipeline import build_pipeline
@@ -22,6 +21,7 @@ from core.transformers import SentenceTransformerWrapper
 from core.engine import SearchEngine
 import os
 import pandas as pd
+import logging
 
 def create_search_engine():
     """
@@ -30,6 +30,7 @@ def create_search_engine():
         tuple: (search_engine, matcher_weights, dataset)
     """
     # Data and model setup
+    log = logging.getLogger(__name__)
     bq = BQHelper(
         billing_project_id=BQ_PROJECT_ID,
         write_project_id=BQ_PROJECT_ID,
