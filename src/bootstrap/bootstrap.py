@@ -60,17 +60,17 @@ def create_search_engine():
     # Instantiate matchers
     fuzzy_model = FuzzyMatcher(column="model_name", df=dataset.df)
     fuzzy_brand = FuzzyMatcher(column="brand", df=dataset.df)
-    fuzzy_blob = FuzzyMatcher(column="blob", df=dataset.df)
+    # fuzzy_blob = FuzzyMatcher(column="blob", df=dataset.df)
     semantic_model = SemanticMatcher(
         embedding_column="model_name_embedding",
         encoder=model,
         df=dataset.df,
     )
-    semantic_blob = SemanticMatcher(
-        embedding_column="blob_embedding",
-        encoder=model,
-        df=dataset.df,
-    )
+    # semantic_blob = SemanticMatcher(
+    #     embedding_column="blob_embedding",
+    #     encoder=model,
+    #     df=dataset.df,
+    # )
     exact_model = ExactMatcher(column="model_name", df=dataset.df)
     exact_blob = ExactMatcher(column="blob", df=dataset.df)
     popular = PopularMatcher(
